@@ -4,14 +4,14 @@ const TARGET_OUTPUT = '19690720';
 process.stdin.on('data', chunk => input += chunk);
 
 process.stdin.on('end', () => {
-  const program = input.trim().split(',');
-  console.log(findInputs(program));
+  const memory = input.trim().split(',');
+  console.log(findInputs(memory));
 });
 
-function findInputs(program) {
+function findInputs(memory) {
   for (let noun = 0; noun < 100; noun++) {
     for (let verb = 0; verb < 100; verb++) {
-      const output = runProgram(program.slice(0), noun + '', verb + '');
+      const output = runProgram(memory, noun + '', verb + '');
 
       if (output === TARGET_OUTPUT) {
         return (100 * noun + verb) + '';
@@ -22,7 +22,8 @@ function findInputs(program) {
   throw new Error('Inputs not found.');
 }
 
-function runProgram(program, noun, verb) {
+function runProgram(memory, noun, verb) {
+  const program = memory.slice(0);
   program[1] = noun;
   program[2] = verb;
 
