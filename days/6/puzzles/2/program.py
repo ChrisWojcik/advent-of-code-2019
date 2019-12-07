@@ -8,11 +8,12 @@ for line in sys.stdin:
   tree.setdefault(orbitee, {})
   tree.setdefault(orbiter, {})
   tree[orbitee].setdefault('parent', None)
-  tree[orbitee].setdefault('children', set())
+  tree[orbitee].setdefault('neighbors', set())
   tree[orbiter].setdefault('parent', None)
-  tree[orbiter].setdefault('children', set())
+  tree[orbiter].setdefault('neighbors', set())
 
-  tree[orbitee]['children'].add(orbiter)
+  tree[orbitee]['neighbors'].add(orbiter)
+  tree[orbiter]['neighbors'].add(orbitee)
   tree[orbiter]['parent'] = orbitee
 
 start_node = tree['YOU']['parent']
@@ -21,25 +22,23 @@ end_node = tree['SAN']['parent']
 def find_shortest_path_length(start_node, end_node):
   distances = {}
   distances[start_node] = 0
-  visited_nodes = set()
+  visited_nodes = {}
   nodes_to_visit = [start_node]
 
   while len(nodes_to_visit) > 0:
     current_node = nodes_to_visit.pop()
-    visited_nodes.add(current_node)
+    visited_nodes[current_node] = True
     distance_to_current_node = distances[current_node]
 
-    children = tree[current_node]['children']
-    parent = { tree[current_node]['parent'] } if tree[current_node]['parent'] != None else set()
-    neighbors = children.union(parent)
+    my_neighbors = tree[current_node]['neighbors']
 
-    for neighbor in neighbors:
+    for neighbor in my_neighbors:
       my_distance_to_neighbor = distance_to_current_node + 1
 
       if (not distances.get(neighbor)) or (distances[neighbor] > my_distance_to_neighbor):
         distances[neighbor] = my_distance_to_neighbor
 
-      if neighbor not in visited_nodes:
+      if not visited_nodes.get(neighbor):
         nodes_to_visit.append(neighbor)
 
   return distances[end_node]
