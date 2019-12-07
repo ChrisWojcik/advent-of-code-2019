@@ -1,2 +1,2 @@
 #!/bin/bash
-node program.js
+python program.py
