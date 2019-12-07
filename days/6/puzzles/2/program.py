@@ -25,7 +25,7 @@ def find_shortest_path_length(start_node, end_node):
   nodes_to_visit = [start_node]
 
   while len(nodes_to_visit) > 0:
-    current_node = nodes_to_visit.pop(0)
+    current_node = nodes_to_visit.pop()
     visited_nodes.add(current_node)
     distance_to_current_node = distances[current_node]
 
