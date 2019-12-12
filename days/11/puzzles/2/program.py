@@ -13,7 +13,7 @@ JUMP_IF_TRUE_OP = 5
 JUMP_IF_FALSE_OP = 6
 LESS_THAN_OP = 7
 EQUALS_OP = 8
-RELATIVE_BASE_OFFST_OP = 9
+RELATIVE_BASE_OFFSET_OP = 9
 HALT_OP = 99
 
 class Computer():
@@ -122,7 +122,7 @@ class Computer():
         self.write(param_3_mode, i + 3, '1' if value_1 == value_2 else '0')
 
         i += 4
-      elif op_code == RELATIVE_BASE_OFFST_OP:
+      elif op_code == RELATIVE_BASE_OFFSET_OP:
         value = self.read(param_1_mode, i + 1)
 
         self._relative_base += int(value)
