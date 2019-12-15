@@ -1,5 +1,7 @@
 import sys
-from PIL import Image
+import os
+import time
+#from PIL import Image
 
 POSITION_MODE = 0
 IMMEDIATE_MODE = 1
@@ -137,11 +139,11 @@ computer = Computer(program)
 
 BOARD_WIDTH = 41
 BOARD_HEIGHT = 25
-EMPTY = (255,255,255)
-WALL = (0,0,0)
-BLOCK = (0,0,255)
-PADDLE = (0,255,0)
-BALL = (255,0,0)
+EMPTY = ' '#(255,255,255)
+WALL = '+'#(0,0,0)
+BLOCK = 'X'#(0,0,255)
+PADDLE = '='#(0,255,0)
+BALL = 'o'#(255,0,0)
 
 board = []
 ball_position = None
@@ -157,6 +159,19 @@ def find_next_move(ball, paddle):
     return '1'
   else:
     return '0'
+
+def draw_board(board, score):
+  visualization = ''
+
+  for i in range(BOARD_WIDTH * BOARD_HEIGHT):
+    visualization += board[i]
+
+    if i > 1 and (i + 1) % BOARD_WIDTH == 0:
+      visualization += '\n'
+
+  visualization += 'SCORE: '+score
+  sys.stdout.write(visualization)
+  sys.stdout.flush()
 
 # first set of outputs draw the initial board
 for _ in range(BOARD_WIDTH * BOARD_HEIGHT):
@@ -177,9 +192,9 @@ for _ in range(BOARD_WIDTH * BOARD_HEIGHT):
     board.append(BALL)
     ball_position = (int(x), int(y))
 
-img = Image.new('RGB', (BOARD_WIDTH, BOARD_HEIGHT))
-img.putdata(board)
-img.save('board.png')
+#img = Image.new('RGB', (BOARD_WIDTH, BOARD_HEIGHT))
+#img.putdata(board)
+#img.save('board.png')
 
 next_move = find_next_move(ball_position, paddle_position)
 
@@ -189,6 +204,8 @@ for _ in range(1):
   y = computer.run(next_move)
   score = computer.run(next_move)
 
+draw_board(board, score)
+
 # play the game until it halts
 while True:
   x = computer.run(next_move)
@@ -197,6 +214,9 @@ while True:
 
   if x == None:
     break
+
+  time.sleep(0.01)
+  os.system('cls' if os.name == 'nt' else 'clear')
 
   if x == '-1':
     score = tile_id
@@ -217,8 +237,9 @@ while True:
     ball_position = (int(x), int(y))
 
   next_move = find_next_move(ball_position, paddle_position)
+  draw_board(board, score)
 
-img = Image.new('RGB', (BOARD_WIDTH, BOARD_HEIGHT))
-img.putdata(board)
-img.save('board-final.png')
-print(score)
+# #img = Image.new('RGB', (BOARD_WIDTH, BOARD_HEIGHT))
+# #img.putdata(board)
+# #img.save('board-final.png')
+# print(score)
