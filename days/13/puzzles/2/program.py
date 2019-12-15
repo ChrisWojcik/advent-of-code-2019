@@ -1,7 +1,6 @@
 import sys
 import os
 import time
-#from PIL import Image
 
 POSITION_MODE = 0
 IMMEDIATE_MODE = 1
@@ -139,11 +138,11 @@ computer = Computer(program)
 
 BOARD_WIDTH = 41
 BOARD_HEIGHT = 25
-EMPTY = ' '#(255,255,255)
-WALL = '+'#(0,0,0)
-BLOCK = 'X'#(0,0,255)
-PADDLE = '='#(0,255,0)
-BALL = 'o'#(255,0,0)
+EMPTY = ' '
+WALL = '+'
+BLOCK = 'X'
+PADDLE = '='
+BALL = 'o'
 
 board = []
 ball_position = None
@@ -160,7 +159,7 @@ def find_next_move(ball, paddle):
   else:
     return '0'
 
-def draw_board(board, score):
+def draw_board(board, score, filename):
   visualization = ''
 
   for i in range(BOARD_WIDTH * BOARD_HEIGHT):
@@ -170,6 +169,9 @@ def draw_board(board, score):
       visualization += '\n'
 
   visualization += 'SCORE: '+score
+  #f = open('board/'+filename+'.txt','w+')
+  #f.write(visualization)
+  #f.close()
   sys.stdout.write(visualization)
   sys.stdout.flush()
 
@@ -192,10 +194,6 @@ for _ in range(BOARD_WIDTH * BOARD_HEIGHT):
     board.append(BALL)
     ball_position = (int(x), int(y))
 
-#img = Image.new('RGB', (BOARD_WIDTH, BOARD_HEIGHT))
-#img.putdata(board)
-#img.save('board.png')
-
 next_move = find_next_move(ball_position, paddle_position)
 
 # read the initial score
@@ -204,7 +202,8 @@ for _ in range(1):
   y = computer.run(next_move)
   score = computer.run(next_move)
 
-draw_board(board, score)
+draw_board(board, score, '0')
+i = 1
 
 # play the game until it halts
 while True:
@@ -237,9 +236,5 @@ while True:
     ball_position = (int(x), int(y))
 
   next_move = find_next_move(ball_position, paddle_position)
-  draw_board(board, score)
-
-# #img = Image.new('RGB', (BOARD_WIDTH, BOARD_HEIGHT))
-# #img.putdata(board)
-# #img.save('board-final.png')
-# print(score)
+  draw_board(board, score, str(i))
+  i += 1
