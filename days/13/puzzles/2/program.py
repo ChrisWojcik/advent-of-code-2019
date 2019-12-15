@@ -149,6 +149,7 @@ ball_position = None
 paddle_position = None
 next_move = '0'
 score = '0'
+frame_count = 1
 
 # try to align paddle with ball
 def find_next_move(ball, paddle):
@@ -159,7 +160,7 @@ def find_next_move(ball, paddle):
   else:
     return '0'
 
-def draw_board(board, score, filename):
+def draw_board(board, score):
   visualization = ''
 
   for i in range(BOARD_WIDTH * BOARD_HEIGHT):
@@ -169,11 +170,20 @@ def draw_board(board, score, filename):
       visualization += '\n'
 
   visualization += 'SCORE: '+score
-  #f = open('board/'+filename+'.txt','w+')
-  #f.write(visualization)
-  #f.close()
-  sys.stdout.write(visualization)
-  sys.stdout.flush()
+
+  # omit frames where the ball and paddle aren't painted
+  if 'o' in visualization and '=' in visualization:
+    f = open('tmp/'+str(frame_count)+'.txt','w+')
+    f.write(visualization)
+    f.close()
+
+    #sys.stdout.write(visualization)
+    #sys.stdout.flush()
+    #time.sleep(0.01)
+
+    return frame_count + 1
+  else:
+    return frame_count
 
 # first set of outputs draw the initial board
 for _ in range(BOARD_WIDTH * BOARD_HEIGHT):
@@ -202,8 +212,7 @@ for _ in range(1):
   y = computer.run(next_move)
   score = computer.run(next_move)
 
-draw_board(board, score, '0')
-i = 1
+frame_count = draw_board(board, score)
 
 # play the game until it halts
 while True:
@@ -214,8 +223,7 @@ while True:
   if x == None:
     break
 
-  time.sleep(0.01)
-  os.system('cls' if os.name == 'nt' else 'clear')
+  #os.system('cls' if os.name == 'nt' else 'clear')
 
   if x == '-1':
     score = tile_id
@@ -236,5 +244,4 @@ while True:
     ball_position = (int(x), int(y))
 
   next_move = find_next_move(ball_position, paddle_position)
-  draw_board(board, score, str(i))
-  i += 1
+  frame_count = draw_board(board, score)
